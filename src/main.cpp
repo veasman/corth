@@ -3,9 +3,10 @@
 
 int main(int argc, char* argv[]) {
     if (argc > 1) {
-        for (int i = 0; i < argc; i++) {
+        for (int i = 1; i < argc; i++) {
             int len = strlen(argv[i]);
             char* fileExt = &argv[i][len - 5];
+
             if (strcmp(fileExt, ".nums") == 0) {
                 // Parser, lexer, etc...
             }
