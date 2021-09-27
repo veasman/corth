@@ -5,13 +5,13 @@ int main(int argc, char* argv[]) {
     if (argc > 1) {
         for (int i = 1; i < argc; i++) {
             int len = strlen(argv[i]);
-            char* fileExt = &argv[i][len - 5];
+            char* fileExt = &argv[i][len - 6];
 
-            if (strcmp(fileExt, ".nums") == 0) {
+            if (strcmp(fileExt, ".corth") == 0) {
                 // Parser, lexer, etc...
             }
             else {
-                std::cout << "Error: File must end in \".nums\"" << std::endl;
+                std::cout << "Error: File must end in \".corth\"" << std::endl;
             }
         }
     }
