@@ -14,9 +14,6 @@ void Lexer::Advance() {
 
 void Lexer::CreateTokens() {
     std::ifstream input(m_strFile);
-    TokenType_t tokenType;
-
-    std::cout << m_strFile << std::endl;
 
     while (!input.eof()) {
         input.get(m_cCur);
