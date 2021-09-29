@@ -24,6 +24,21 @@ int main(int argc, char* argv[]) {
                     case TokenType_t::ADD:
                         tokenString = "ADD";
                         break;
+                    case TokenType_t::SUB:
+                        tokenString = "SUB";
+                        break;
+                    case TokenType_t::MUL:
+                        tokenString = "MUL";
+                        break;
+                    case TokenType_t::DIV:
+                        tokenString = "DIV";
+                        break;
+                    case TokenType_t::MOD:
+                        tokenString = "MOD";
+                        break;
+                    case TokenType_t::EQU:
+                        tokenString = "EQU";
+                        break;
                     default:
                         tokenString = "OTH";
                         break;
