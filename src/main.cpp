@@ -18,8 +18,11 @@ int main(int argc, char* argv[]) {
                 for (Token token : lexer.m_vTokens) {
                     std::string tokenString;
                     switch (token.m_Type) {
-                    case TokenType_t::INT:
-                        tokenString = "INT";
+                    case TokenType_t::NUM:
+                        tokenString = "NUM";
+                        break;
+                    case TokenType_t::FLT:
+                        tokenString = "FLT";
                         break;
                     case TokenType_t::ADD:
                         tokenString = "ADD";
