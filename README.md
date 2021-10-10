@@ -6,7 +6,7 @@
 
 ## Goals
 
-- [ ] Compiled
+- [ ] Assembled
 - [ ] Interpreted
 - [ ] Stack-based
 - [ ] [Turing-complete](https://en.wikipedia.org/wiki/Turing_completeness)
