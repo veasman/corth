@@ -17,31 +17,38 @@ void Lexer::Advance() {
 void Lexer::CreateTokens() {
     std::ifstream input(m_strFile);
 
+    auto GetTokenNum = [=, &input]() mutable -> Token {
+        std::string numVal = "";
+        while (std::isdigit(m_cCur)) {
+            numVal += m_cCur;
+            Advance();
+            input.get(m_cCur);
+        }
+        return Token(TokenType_t::NUM, numVal);
+    };
+
+    auto GetTokenString = [=, &input]() mutable -> Token {
+        std::string opVal = "";
+        while (std::isalpha(m_cCur)) {
+            opVal += m_cCur;
+            Advance();
+            input.get(m_cCur);
+        }
+        std::cout << "Token added. Type: OP, Value: " << opVal << std::endl;
+        return Token(TokenType_t::OP, opVal);
+    };
+
     // TODO: This can most likely be faster. I'll worry about it in the future.
-    // FIXME: If we can get the current char inside advance that would make
+    // FIXME: If we can get the current char inside Advance that would make
     //        everything so much easier.
     while (!input.eof()) {
         input.get(m_cCur);
 
         if (std::isdigit(m_cCur)) {
-            // TODO: This block is messy, not much I can do about it though
-            std::string numVal = "";
-            while (std::isdigit(m_cCur)) {
-                numVal += m_cCur;
-                Advance();
-                input.get(m_cCur);
-            }
-            m_qTokens.push(Token(TokenType_t::NUM, numVal));
+            m_qTokens.push(GetTokenNum());
         }
         else if (std::isalpha(m_cCur)) { // TODO: Why the hell isnt this working
-            std::string opVal = "";
-            while (std::isalpha(m_cCur)) {
-                opVal += m_cCur;
-                Advance();
-                input.get(m_cCur);
-            }
-            std::cout << opVal << std::endl;
-            m_qTokens.push(Token(TokenType_t::OP, opVal));
+            m_qTokens.push(GetTokenString());
         }
         else {
             m_qTokens.push(Token(m_cCur));
