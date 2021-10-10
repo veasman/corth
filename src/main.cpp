@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
             std::string tokenString;
             switch (token.m_Type) {
             case TokenType_t::NUM:
-                tokenString = "NUM";
+                tokenString = "NUM: " + token.m_strVal;
                 break;
             case TokenType_t::ADD:
                 tokenString = "ADD";
@@ -52,14 +52,14 @@ int main(int argc, char* argv[]) {
             case TokenType_t::EQU:
                 tokenString = "EQU";
                 break;
+            case TokenType_t::OP:
+                tokenString = "OP: " + token.m_strVal;
+                break;
             default:
                 tokenString = "OTH";
                 break;
             }
-            std::cout <<
-                "[" << tokenString <<
-                ", " << token.m_strVal <<
-                "]" << std::endl;
+            std::cout << "[" << tokenString << "]" << std::endl;
             lexer.m_qTokens.pop();
         }
     }
