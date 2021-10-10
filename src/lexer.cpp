@@ -1,5 +1,7 @@
+#include <iostream>
 #include <cctype>
 #include <fstream>
+#include <queue>
 #include "header/lexer.hpp"
 
 Lexer::Lexer(std::string file) {
@@ -24,24 +26,25 @@ void Lexer::CreateTokens() {
         if (std::isdigit(m_cCur)) {
             // TODO: This block is messy, not much I can do about it though
             std::string numVal = "";
-            int dots = 0;
-
-            while (std::isdigit(m_cCur) || m_cCur == '.') {
-                if (m_cCur == '.' && dots < 1) {
-                    dots++;
-                    numVal += ".";
-                }
-                else {
-                    numVal += m_cCur;
-                }
+            while (std::isdigit(m_cCur)) {
+                numVal += m_cCur;
                 Advance();
                 input.get(m_cCur);
             }
-            m_vTokens.push_back(Token(TokenType_t::NUM, numVal));
+            m_qTokens.push(Token(TokenType_t::NUM, numVal));
         }
-        else if (m_cCur != 10) { // Ghetto fix but fine for now
-            // If we had an else here, nonesense tokens would be created
-            m_vTokens.push_back(Token(m_cCur));
+        else if (std::isalpha(m_cCur)) { // TODO: Why the hell isnt this working
+            std::string opVal = "";
+            while (std::isalpha(m_cCur)) {
+                opVal += m_cCur;
+                Advance();
+                input.get(m_cCur);
+            }
+            std::cout << opVal << std::endl;
+            m_qTokens.push(Token(TokenType_t::OP, opVal));
+        }
+        else {
+            m_qTokens.push(Token(m_cCur));
         }
         Advance();
     }
