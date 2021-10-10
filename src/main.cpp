@@ -34,9 +34,6 @@ int main(int argc, char* argv[]) {
             case TokenType_t::NUM:
                 tokenString = "NUM";
                 break;
-            case TokenType_t::FLT:
-                tokenString = "FLT";
-                break;
             case TokenType_t::ADD:
                 tokenString = "ADD";
                 break;
