@@ -3,13 +3,13 @@
 
 enum TokenType_t {
     NUM,
-    FLT,
     ADD,
     SUB,
     MUL,
     DIV,
     MOD,
-    EQU
+    EQU,
+    OP
 };
 
 // Having this map makes it quicker to create tokens, and cleans up the code
