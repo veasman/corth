@@ -1,8 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <utility>
 #include "header/lexer.hpp"
 
-#define ADVANCE i++; this->m_iCol++; this->m_iIdx++; cur = test[i];
+#define ADVANCE i++; this->m_iCol++; this->m_iIdx++; cur = line[i];
 
 CLexer::CLexer(std::string file) {
     this->m_strFileName = file;
@@ -13,64 +14,67 @@ CLexer::CLexer(std::string file) {
 }
 
 std::queue<Token> CLexer::GetFileTokens() {
-    std::string test = "34 35 + print";
+    std::ifstream in(this->m_strFileName);
 
-    for (int i = 0; i < test.size(); i++) {
-        char cur = test[i];
+    for (std::string line; getline(in, line);) {
+        for (int i = 0; i < line.size(); i++) {
+            char cur = line[i];
 
-        if (cur == '\n') {
-            this->m_iCol = 0;
-            this->m_iLine++;
-            ADVANCE;
-        }
-
-        if (cur == '\t' || cur == ' ') {
-            ADVANCE;
-        }
-
-        if (std::isdigit(cur)) {
-            std::string number = "";
-            while (std::isdigit(cur)) {
-                number += cur;
+            if (cur == '\n') {
+                this->m_iCol = 0;
+                this->m_iLine++;
                 ADVANCE;
             }
-            this->m_qTokens.push(Token(TokenType::INT, number));
-        }
-        else if (std::isalpha(cur)) {
-            std::string word = "";
-            while (std::isalpha(cur)) {
-                word += cur;
+
+            if (cur == '\t' || cur == ' ') {
                 ADVANCE;
             }
-            this->m_qTokens.push(Token(TokenType::WORD, word));
-        }
-        else if (cur == '+') {
-            this->m_qTokens.push(Token(TokenType::PLUS, ""));
-            ADVANCE;
-        }
 
-        this->m_iCol++;
-        this->m_iIdx++;
+            if (std::isdigit(cur)) {
+                std::string number = "";
+                while (std::isdigit(cur)) {
+                    number += cur;
+                    ADVANCE;
+                }
+                this->m_qTokens.push(Token(TokenType::INT, number));
+            }
+            else if (std::isalpha(cur)) {
+                std::string word = "";
+                while (std::isalpha(cur)) {
+                    word += cur;
+                    ADVANCE;
+                }
+                this->m_qTokens.push(Token(TokenType::WORD, word));
+            }
+            else if (cur == '+') {
+                this->m_qTokens.push(Token(TokenType::PLUS, ""));
+                ADVANCE;
+            }
+
+            this->m_iCol++;
+            this->m_iIdx++;
+        }
     }
 
-    while (!this->m_qTokens.empty()) {
+    // Keeping this for debugging later
+    /*std::queue<Token> copy = this->m_qTokens;
+    while (!copy.empty()) {
         std::string output = "";
-        switch (this->m_qTokens.front().m_Type) {
+        switch (copy.front().m_Type) {
         case TokenType::INT:
-            output = "INT: " + this->m_qTokens.front().m_strValue;
+            output = "INT: " + copy.front().m_strValue;
             break;
         case TokenType::PLUS:
             output = "PLUS";
             break;
         case TokenType::WORD:
-            output = "WORD: " + this->m_qTokens.front().m_strValue;
+            output = "WORD: " + copy.front().m_strValue;
             break;
         }
-        this->m_qTokens.pop();
+        copy.pop();
 
         std::cout << "[" << output << "]" << std::endl;
-    }
+    }*/
 
-    // Why is m_qTokens empty?
     return this->m_qTokens;
 }

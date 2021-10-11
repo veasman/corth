@@ -24,7 +24,8 @@ int main(int argc, char* argv[]) {
 
         CLexer lexer(argv[i]);
         CComplier compiler(argv[i], lexer.GetFileTokens());
-        compiler.NasmCompile();
+        compiler.GenerateNasm();
+        //compiler.CompileNasm();
     }
 
     return 0;

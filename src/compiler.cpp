@@ -10,9 +10,10 @@ CComplier::CComplier(std::string fileName, std::queue<Token> tokens) {
     this->m_qTokens = tokens;
 }
 
-void CComplier::NasmCompile() {
+void CComplier::GenerateNasm() {
+    std::cout << "[LOG] Generating " << this->m_strFileName << ".asm" << std::endl;
+
     // Open .asm file and clear contents
-    std::cout << this->m_qTokens.size() << std::endl;
     std::ofstream out(this->m_strFileName + ".asm",
         std::ofstream::out | std::ofstream::trunc);
 
@@ -57,13 +58,14 @@ void CComplier::NasmCompile() {
     out << "_start:\n";
     out << "\tmov [args_ptr], rsp\n";
 
-    // TODO: This code isnt being run, because m_qTokens is empty for some reason
-    for (int i = 0; i < this->m_qTokens.size(); i++) {
-        std::cout << "in for loop\n";
-        out << "addr_" << i << ":\n";
+    // Grab the size before looping through so we can reuse it later
+    int tokensSize = this->m_qTokens.size();
+    int addrNum = 0;
+
+    while (!this->m_qTokens.empty()) {
+        out << "addr_" << addrNum << ":\n";
         switch (this->m_qTokens.front().m_Type) {
         case TokenType::INT:
-            std::cout << "new int\n";
             out << "\t;; -- push int " << this->m_qTokens.front().m_strValue << " --\n";
             out << "\tmov rax, " << this->m_qTokens.front().m_strValue << "\n";
             out << "\tpush rax\n";
@@ -90,9 +92,11 @@ void CComplier::NasmCompile() {
             break;
         }
 
+        addrNum++;
         this->m_qTokens.pop();
     }
-    out << "addr_" << this->m_qTokens.size() << ":\n";
+
+    out << "addr_" << tokensSize << ":\n";
     out << "\tmov rax, 60\n";
     out << "\tmov rdi, 0\n";
     out << "\tsyscall\n";
@@ -100,4 +104,12 @@ void CComplier::NasmCompile() {
     out << "segment .bss\n";
     out << "args_ptr: resq 1\n";
     out << "mem: resb " << MEM_CAPACITY << "\n";
+}
+
+void CComplier::CompileNasm() {
+    std::string cmd = "";
+    cmd = "nasm -felf64 " + this->m_strFileName + ".asm";
+    system(cmd.c_str());
+    cmd = "ld -o " + this->m_strFileName + " " + this->m_strFileName + ".asm";
+    system(cmd.c_str());
 }

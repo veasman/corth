@@ -7,7 +7,8 @@
 class CComplier {
 public:
     CComplier(std::string fileName, std::queue<Token> tokens);
-    void NasmCompile();
+    void GenerateNasm();
+    void CompileNasm();
 
 private:
     std::string m_strFileName;
