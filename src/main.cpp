@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include "header/lexer.hpp"
+#include "header/compiler.hpp"
 
 void PrintUsage() {
     std::cout << "usage: ./corth file.corth" << std::endl;
@@ -22,7 +23,8 @@ int main(int argc, char* argv[]) {
         }
 
         CLexer lexer(argv[i]);
-        std::queue<Token> tokens = lexer.GetFileTokens();
+        CComplier compiler(argv[i], lexer.GetFileTokens());
+        compiler.NasmCompile();
     }
 
     return 0;

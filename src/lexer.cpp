@@ -71,5 +71,6 @@ std::queue<Token> CLexer::GetFileTokens() {
         std::cout << "[" << output << "]" << std::endl;
     }
 
+    // Why is m_qTokens empty?
     return this->m_qTokens;
 }
