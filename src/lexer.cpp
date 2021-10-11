@@ -1,58 +1,75 @@
 #include <iostream>
-#include <cctype>
-#include <fstream>
-#include <queue>
+#include <utility>
 #include "header/lexer.hpp"
 
-Lexer::Lexer(std::string file) {
-    m_strFile = file;
-    m_Pos = Position(-1, 0, -1);
-    Advance();
+#define ADVANCE i++; this->m_iCol++; this->m_iIdx++; cur = test[i];
+
+CLexer::CLexer(std::string file) {
+    this->m_strFileName = file;
+    this->m_qTokens = {};
+    this->m_iLine = 0;
+    this->m_iCol = 0;
+    this->m_iIdx = 0;
 }
 
-void Lexer::Advance() {
-    m_Pos.Advance(m_cCur);
-}
+std::queue<Token> CLexer::GetFileTokens() {
+    std::string test = "34 35 + print";
 
-void Lexer::CreateTokens() {
-    std::ifstream input(m_strFile);
+    for (int i = 0; i < test.size(); i++) {
+        char cur = test[i];
 
-    auto GetTokenNum = [=, &input]() mutable -> Token {
-        std::string numVal = "";
-        while (std::isdigit(m_cCur)) {
-            numVal += m_cCur;
-            Advance();
-            input.get(m_cCur);
+        if (cur == '\n') {
+            this->m_iCol = 0;
+            this->m_iLine++;
+            ADVANCE;
         }
-        return Token(TokenType_t::NUM, numVal);
-    };
 
-    auto GetTokenString = [=, &input]() mutable -> Token {
-        std::string opVal = "";
-        while (std::isalpha(m_cCur)) {
-            opVal += m_cCur;
-            Advance();
-            input.get(m_cCur);
+        if (cur == '\t' || cur == ' ') {
+            ADVANCE;
         }
-        std::cout << "Token added. Type: OP, Value: " << opVal << std::endl;
-        return Token(TokenType_t::OP, opVal);
-    };
 
-    // TODO: This can most likely be faster. I'll worry about it in the future.
-    // FIXME: If we can get the current char inside Advance that would make
-    //        everything so much easier.
-    while (!input.eof()) {
-        input.get(m_cCur);
+        if (std::isdigit(cur)) {
+            std::string number = "";
+            while (std::isdigit(cur)) {
+                number += cur;
+                ADVANCE;
+            }
+            this->m_qTokens.push(Token(TokenType::INT, number));
+        }
+        else if (std::isalpha(cur)) {
+            std::string word = "";
+            while (std::isalpha(cur)) {
+                word += cur;
+                ADVANCE;
+            }
+            this->m_qTokens.push(Token(TokenType::WORD, word));
+        }
+        else if (cur == '+') {
+            this->m_qTokens.push(Token(TokenType::PLUS, ""));
+            ADVANCE;
+        }
 
-        if (std::isdigit(m_cCur)) {
-            m_qTokens.push(GetTokenNum());
-        }
-        else if (std::isalpha(m_cCur)) { // TODO: Why the hell isnt this working
-            m_qTokens.push(GetTokenString());
-        }
-        else {
-            m_qTokens.push(Token(m_cCur));
-        }
-        Advance();
+        this->m_iCol++;
+        this->m_iIdx++;
     }
+
+    while (!this->m_qTokens.empty()) {
+        std::string output = "";
+        switch (this->m_qTokens.front().m_Type) {
+        case TokenType::INT:
+            output = "INT: " + this->m_qTokens.front().m_strValue;
+            break;
+        case TokenType::PLUS:
+            output = "PLUS";
+            break;
+        case TokenType::WORD:
+            output = "WORD: " + this->m_qTokens.front().m_strValue;
+            break;
+        }
+        this->m_qTokens.pop();
+
+        std::cout << "[" << output << "]" << std::endl;
+    }
+
+    return this->m_qTokens;
 }

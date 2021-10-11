@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string.h>
-#include <queue>
 #include "header/lexer.hpp"
 
 void PrintUsage() {
@@ -22,46 +21,8 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        Lexer lexer(argv[i]);
-        lexer.CreateTokens();
-
-        // Corth will do more later, but for now it will just show you
-        // the tokens created from a given file
-        for (int i = 0; i < lexer.m_qTokens.size(); i++) {
-            Token token = lexer.m_qTokens.front();
-            std::string tokenString;
-            switch (token.m_Type) {
-            case TokenType_t::NUM:
-                tokenString = "NUM: " + token.m_strVal;
-                break;
-            case TokenType_t::ADD:
-                tokenString = "ADD";
-                break;
-            case TokenType_t::SUB:
-                tokenString = "SUB";
-                break;
-            case TokenType_t::MUL:
-                tokenString = "MUL";
-                break;
-            case TokenType_t::DIV:
-                tokenString = "DIV";
-                break;
-            case TokenType_t::MOD:
-                tokenString = "MOD";
-                break;
-            case TokenType_t::EQU:
-                tokenString = "EQU";
-                break;
-            case TokenType_t::OP:
-                tokenString = "OP: " + token.m_strVal;
-                break;
-            default:
-                tokenString = "OTH";
-                break;
-            }
-            std::cout << "[" << tokenString << "]" << std::endl;
-            lexer.m_qTokens.pop();
-        }
+        CLexer lexer(argv[i]);
+        std::queue<Token> tokens = lexer.GetFileTokens();
     }
 
     return 0;

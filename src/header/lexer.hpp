@@ -1,15 +1,20 @@
-#pragma once
-#include "position.hpp"
+#ifndef LEXER_H
+#define LEXER_H
+
+#include <queue>
 #include "token.hpp"
 
-class Lexer {
+class CLexer {
 public:
-    std::string m_strFile;
-    Position m_Pos = Position(-1, 0, -1); // Why do I need to initialize here?
-    std::queue<Token> m_qTokens;
-    char m_cCur;
+    CLexer(std::string file);
+    std::queue<Token> GetFileTokens();
 
-    Lexer(std::string file);
-    void Advance();
-    void CreateTokens();
+private:
+    std::string m_strFileName;
+    std::queue<Token> m_qTokens;
+    int m_iLine;
+    int m_iCol;
+    int m_iIdx;
 };
+
+#endif

@@ -1,33 +1,19 @@
-#pragma once
-#include <unordered_map>
+#ifndef TOKEN_H
+#define TOKEN_H
 
-enum TokenType_t {
-    NUM,
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    MOD,
-    EQU,
-    OP
-};
-
-// Having this map makes it quicker to create tokens, and cleans up the code
-inline std::unordered_map<char, TokenType_t> mTokenMap = {
-    { '+', TokenType_t::ADD },
-    { '-', TokenType_t::SUB },
-    { '*', TokenType_t::MUL },
-    { '/', TokenType_t::DIV },
-    { '%', TokenType_t::MOD },
-    { '=', TokenType_t::EQU },
+enum TokenType {
+    INT,
+    PLUS,
+    WORD
 };
 
 struct Token {
-    // Access token types based on the char associate with it
-    Token(char tokenVal, std::string val = "") {
-        m_Type = mTokenMap[tokenVal];
-        m_strVal = val;
+    Token(TokenType type, std::string value) {
+        m_Type = type;
+        m_strValue = value;
     }
-    TokenType_t m_Type;
-    std::string m_strVal;
+    TokenType m_Type;
+    std::string m_strValue;
 };
+
+#endif
