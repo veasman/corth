@@ -1,7 +1,8 @@
 #include <iostream>
 #include <string.h>
-#include "header/lexer.hpp"
+#include "header/global.hpp"
 #include "header/compiler.hpp"
+#include "header/lexer.hpp"
 
 void PrintUsage() {
     std::cout << "usage: ./corth file.corth" << std::endl;

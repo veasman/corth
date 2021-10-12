@@ -4,13 +4,19 @@
 #include "header/lexer.hpp"
 
 #define ADVANCE i++; this->m_iCol++; this->m_iIdx++; cur = line[i];
+#define ERR(msg) std::cout \
+                << this->m_strFileName \
+                << ":" << this->m_iLine \
+                << ":" << this->m_iCol \
+                << ": Error: " << msg << std::endl; \
+                exit(EXIT_FAILURE);
 
 CLexer::CLexer(std::string file) {
     this->m_strFileName = file;
     this->m_qTokens = {};
-    this->m_iLine = 0;
-    this->m_iCol = 0;
-    this->m_iIdx = 0;
+    this->m_iLine = 1;
+    this->m_iCol = 1;
+    this->m_iIdx = 1;
 }
 
 std::queue<Token> CLexer::GetFileTokens() {
@@ -45,7 +51,12 @@ std::queue<Token> CLexer::GetFileTokens() {
                     ADVANCE;
                 }
                 Intrinsics intrType;
-                if (word == "print") intrType = Intrinsics::PRINT;
+                if (word == "print") {
+                    intrType = Intrinsics::PRINT;
+                }
+                else {
+                    ERR("Unknown intrinsic \"" << word << "\"");
+                }
 
                 this->m_qTokens.push(Token(intrType, word));
             }

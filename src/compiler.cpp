@@ -85,11 +85,11 @@ void CComplier::GenerateNasm() {
                 out << "\tcall print\n";
                 break;
             default:
-                std::cout << "unreachable\n";
+                //std::cout << "unreachable\n";
                 break;
             }
         default:
-            std::cout << "unreachable\n";
+            //std::cout << "unreachable\n";
             break;
         }
 
