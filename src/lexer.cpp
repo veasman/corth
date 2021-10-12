@@ -44,7 +44,10 @@ std::queue<Token> CLexer::GetFileTokens() {
                     word += cur;
                     ADVANCE;
                 }
-                this->m_qTokens.push(Token(TokenType::WORD, word));
+                Intrinsics intrType;
+                if (word == "print") intrType = Intrinsics::PRINT;
+
+                this->m_qTokens.push(Token(intrType, word));
             }
             else if (cur == '+') {
                 this->m_qTokens.push(Token(TokenType::PLUS, ""));
@@ -67,8 +70,8 @@ std::queue<Token> CLexer::GetFileTokens() {
         case TokenType::PLUS:
             output = "PLUS";
             break;
-        case TokenType::WORD:
-            output = "WORD: " + copy.front().m_strValue;
+        case TokenType::INTRINSIC:
+            output = "INTRINSIC: " + copy.front().m_strValue;
             break;
         }
         copy.pop();

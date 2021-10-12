@@ -77,16 +77,17 @@ void CComplier::GenerateNasm() {
             out << "\tadd rax, rbx\n";
             out << "\tpush rax\n";
             break;
-        case TokenType::WORD:
-            if (this->m_qTokens.front().m_strValue == "print") {
+        case TokenType::INTRINSIC:
+            switch (this->m_qTokens.front().m_Intrinsic) {
+            case Intrinsics::PRINT:
                 out << "\t;; -- print --\n";
                 out << "\tpop rdi\n";
                 out << "\tcall print\n";
-            }
-            else {
+                break;
+            default:
                 std::cout << "unreachable\n";
+                break;
             }
-            break;
         default:
             std::cout << "unreachable\n";
             break;
