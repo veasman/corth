@@ -54,6 +54,9 @@ std::queue<Token> CLexer::GetFileTokens() {
                 if (word == "print") {
                     intrType = Intrinsics::PRINT;
                 }
+                else if (word == "drop") {
+                    intrType = Intrinsics::DROP;
+                }
                 else {
                     ERR("Unknown intrinsic \"" << word << "\"");
                 }

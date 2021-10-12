@@ -9,6 +9,7 @@ enum TokenType {
 
 enum Intrinsics {
     PRINT,
+    DROP,
     IF,
     ELSE,
     END,

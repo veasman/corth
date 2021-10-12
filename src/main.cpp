@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string.h>
-#include "header/global.hpp"
 #include "header/compiler.hpp"
 #include "header/lexer.hpp"
 

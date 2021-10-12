@@ -84,12 +84,13 @@ void CComplier::GenerateNasm() {
                 out << "\tpop rdi\n";
                 out << "\tcall print\n";
                 break;
+            case Intrinsics::DROP:
+                out << "    ;; -- drop --\n";
+                out << "    pop rax\n";
             default:
-                //std::cout << "unreachable\n";
                 break;
             }
         default:
-            //std::cout << "unreachable\n";
             break;
         }
 
