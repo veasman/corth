@@ -133,8 +133,12 @@ void CComplier::GenerateNasm() {
 
 void CComplier::CompileNasm() {
     std::string cmd = "";
+
     cmd = "nasm -felf64 " + this->m_strFileName + ".asm";
     system(cmd.c_str());
+    std::cout << "[CMD] " << cmd << std::endl;
+
     cmd = "ld -o " + this->m_strFileName + " " + this->m_strFileName + ".o";
     system(cmd.c_str());
+    std::cout << "[CMD] " << cmd << std::endl;
 }
