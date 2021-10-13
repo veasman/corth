@@ -66,19 +66,19 @@ std::queue<Token> CLexer::GetFileTokens() {
                 this->m_qTokens.push(Token(intrType, word));
             }
             else if (cur == '+') {
-                this->m_qTokens.push(Token(TokenType::ADD, ""));
+                this->m_qTokens.push(Token(TokenType::ADD));
                 ADVANCE;
             }
             else if (cur == '-') {
-                this->m_qTokens.push(Token(TokenType::SUB, ""));
+                this->m_qTokens.push(Token(TokenType::SUB));
                 ADVANCE;
             }
             else if (cur == '*') {
-                this->m_qTokens.push(Token(TokenType::MUL, ""));
+                this->m_qTokens.push(Token(TokenType::MUL));
                 ADVANCE;
             }
             else if (cur == '/') {
-                this->m_qTokens.push(Token(TokenType::DIVMOD, ""));
+                this->m_qTokens.push(Token(TokenType::DIVMOD));
                 ADVANCE;
             }
 

@@ -20,12 +20,12 @@ enum Intrinsics {
 };
 
 struct Token {
-    Token(Intrinsics intrinsic, std::string value) {
+    Token(Intrinsics intrinsic, std::string value = "") {
         m_Type = TokenType::INTRINSIC;
         m_Intrinsic = intrinsic;
         m_strValue = value;
     }
-    Token(TokenType type, std::string value) {
+    Token(TokenType type, std::string value = "") {
         m_Type = type;
         m_Intrinsic = Intrinsics::NONE;
         m_strValue = value;
