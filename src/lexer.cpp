@@ -27,16 +27,18 @@ std::queue<Token> CLexer::GetFileTokens() {
             char cur = line[i];
 
             if (cur == '\n') {
-                this->m_iCol = 0;
+                this->m_iCol = 1;
                 this->m_iLine++;
                 ADVANCE;
             }
-
-            if (cur == '\t' || cur == ' ') {
+            else if (cur == '\t' || cur == ' ') {
                 ADVANCE;
             }
-
-            if (std::isdigit(cur)) {
+            else if (cur == '/' && line[i+1] == '/') {
+                while (i < line.size())
+                    ADVANCE;
+            }
+            else if (std::isdigit(cur)) {
                 std::string number = "";
                 while (std::isdigit(cur)) {
                     number += cur;
