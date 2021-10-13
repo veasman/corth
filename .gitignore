@@ -1,4 +1,4 @@
 build
-.asm
-.o
-math
+examples/.asm
+examples/.o
+examples/math
