@@ -70,12 +70,35 @@ void CComplier::GenerateNasm() {
             out << "\tmov rax, " << this->m_qTokens.front().m_strValue << "\n";
             out << "\tpush rax\n";
             break;
-        case TokenType::PLUS:
+        case TokenType::ADD:
             out << "\t;; -- plus --\n";
             out << "\tpop rax\n";
             out << "\tpop rbx\n";
             out << "\tadd rax, rbx\n";
             out << "\tpush rax\n";
+            break;
+        case TokenType::SUB:
+            out << "\t;; -- minus --\n";
+            out << "\tpop rax\n";
+            out << "\tpop rbx\n";
+            out << "\tsub rbx, rax\n";
+            out << "\tpush rbx\n";
+            break;
+        case TokenType::MUL:
+            out << "\t;; -- mul --\n";
+            out << "\tpop rax\n";
+            out << "\tpop rbx\n";
+            out << "\tmul rbx\n";
+            out << "\tpush rax\n";
+            break;
+        case TokenType::DIVMOD:
+            out << "\t;; -- mod --\n";
+            out << "\txor rdx, rdx\n";
+            out << "\tpop rbx\n";
+            out << "\tpop rax\n";
+            out << "\tdiv rbx\n";
+            out << "\tpush rax\n";
+            out << "\tpush rdx\n";
             break;
         case TokenType::INTRINSIC:
             switch (this->m_qTokens.front().m_Intrinsic) {
@@ -85,8 +108,8 @@ void CComplier::GenerateNasm() {
                 out << "\tcall print\n";
                 break;
             case Intrinsics::DROP:
-                out << "    ;; -- drop --\n";
-                out << "    pop rax\n";
+                out << "\t;; -- drop --\n";
+                out << "\tpop rax\n";
             default:
                 break;
             }

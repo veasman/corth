@@ -64,7 +64,19 @@ std::queue<Token> CLexer::GetFileTokens() {
                 this->m_qTokens.push(Token(intrType, word));
             }
             else if (cur == '+') {
-                this->m_qTokens.push(Token(TokenType::PLUS, ""));
+                this->m_qTokens.push(Token(TokenType::ADD, ""));
+                ADVANCE;
+            }
+            else if (cur == '-') {
+                this->m_qTokens.push(Token(TokenType::SUB, ""));
+                ADVANCE;
+            }
+            else if (cur == '*') {
+                this->m_qTokens.push(Token(TokenType::MUL, ""));
+                ADVANCE;
+            }
+            else if (cur == '/') {
+                this->m_qTokens.push(Token(TokenType::DIVMOD, ""));
                 ADVANCE;
             }
 
@@ -72,26 +84,6 @@ std::queue<Token> CLexer::GetFileTokens() {
             this->m_iIdx++;
         }
     }
-
-    // Keeping this for debugging later
-    /*std::queue<Token> copy = this->m_qTokens;
-    while (!copy.empty()) {
-        std::string output = "";
-        switch (copy.front().m_Type) {
-        case TokenType::INT:
-            output = "INT: " + copy.front().m_strValue;
-            break;
-        case TokenType::PLUS:
-            output = "PLUS";
-            break;
-        case TokenType::INTRINSIC:
-            output = "INTRINSIC: " + copy.front().m_strValue;
-            break;
-        }
-        copy.pop();
-
-        std::cout << "[" << output << "]" << std::endl;
-    }*/
 
     return this->m_qTokens;
 }

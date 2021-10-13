@@ -3,7 +3,10 @@
 
 enum TokenType {
     INT,
-    PLUS,
+    ADD,
+    SUB,
+    MUL,
+    DIVMOD,
     INTRINSIC
 };
 
