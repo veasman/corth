@@ -1,0 +1,4 @@
+10 20 + print // expected output: 30
+15 5 - print // expected output: 10
+3 4 * print // expected output: 12
+8 3 / print print // expected output: 2\n2
