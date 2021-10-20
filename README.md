@@ -29,7 +29,7 @@ make
 
 ## Examples
 
-You can check out [examples](https://github.com/veasman/corth/blob/master/examples/) for some small programs written in corth. Otherwise, here is a small example of conditionals in corth
+You can check out [examples](https://github.com/veasman/corth/blob/master/examples/) for some small programs written in corth. Otherwise, here is a small example of how to use conditionals.
 ``` c
 // If 100 + 20 > 20
 if 100 20 + 20 > do
