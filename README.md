@@ -9,7 +9,7 @@
 - [x] Compiled
 - [ ] Interpreted
 - [x] Stack-based
-- [ ] [Turing-complete](https://en.wikipedia.org/wiki/Turing_completeness)
+- [x] [Turing-complete](https://github.com/veasman/corth/blob/master/examples/ifelse.corth)
 
 ## Build
 ```bash

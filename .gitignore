@@ -1,4 +1,5 @@
 build
-examples/.asm
-examples/.o
+examples/*.asm
+examples/*.o
 examples/math
+examples/ifelse
