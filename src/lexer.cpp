@@ -7,7 +7,7 @@
 #define ERR(msg) std::cout \
                 << this->m_strFileName \
                 << ":" << this->m_iLine \
-                << ":" << this->m_iCol \
+                << ":" << this->m_iCol - word.length() \
                 << ": Error: " << msg << std::endl; \
                 exit(EXIT_FAILURE);
 
@@ -19,7 +19,7 @@ CLexer::CLexer(std::string file) {
     this->m_iIdx = 1;
 }
 
-std::queue<Token> CLexer::GetFileTokens() {
+std::deque<Token> CLexer::GetFileTokens() {
     std::ifstream in(this->m_strFileName);
 
     for (std::string line; getline(in, line);) {
@@ -35,8 +35,9 @@ std::queue<Token> CLexer::GetFileTokens() {
                 ADVANCE;
             }
             else if (cur == '/' && line[i+1] == '/') {
-                while (i < line.size())
+                while (i < line.size()) {
                     ADVANCE;
+                }
             }
             else if (std::isdigit(cur)) {
                 std::string number = "";
@@ -44,7 +45,7 @@ std::queue<Token> CLexer::GetFileTokens() {
                     number += cur;
                     ADVANCE;
                 }
-                this->m_qTokens.push(Token(TokenType::INT, number));
+                this->m_qTokens.push_back(Token(TokenType::INT, number));
             }
             else if (std::isalpha(cur)) {
                 std::string word = "";
@@ -52,6 +53,7 @@ std::queue<Token> CLexer::GetFileTokens() {
                     word += cur;
                     ADVANCE;
                 }
+
                 Intrinsics intrType;
                 if (word == "print") {
                     intrType = Intrinsics::PRINT;
@@ -59,26 +61,67 @@ std::queue<Token> CLexer::GetFileTokens() {
                 else if (word == "drop") {
                     intrType = Intrinsics::DROP;
                 }
+                else if (word == "dup") {
+                    intrType = Intrinsics::DUP;
+                }
+                else if (word == "if") {
+                    intrType = Intrinsics::IF;
+                }
+                else if (word == "while") {
+                    intrType = Intrinsics::WHILE;
+                }
+                else if (word == "do") {
+                    intrType = Intrinsics::DO;
+                    this->m_iDoAddr = this->m_qTokens.size();
+                }
+                else if (word == "else") {
+                    intrType = Intrinsics::ELSE;
+                    this->m_iElseAddr = this->m_qTokens.size();
+                    this->m_qTokens[this->m_iDoAddr].m_iConPair = this->m_qTokens.size() + 1;
+                }
+                else if (word == "end") {
+                    intrType = Intrinsics::END;
+                    this->m_iEndAddr = this->m_qTokens.size();
+                    this->m_qTokens[this->m_iElseAddr].m_iConPair = this->m_qTokens.size();
+                }
                 else {
-                    ERR("Unknown intrinsic \"" << word << "\"");
+                    ERR("Unknown word \"" << word << "\"");
                 }
 
-                this->m_qTokens.push(Token(intrType, word));
+                this->m_qTokens.push_back(Token(intrType, word));
             }
+            // This is hard to look at. Might fix in the future.
             else if (cur == '+') {
-                this->m_qTokens.push(Token(TokenType::ADD));
+                this->m_qTokens.push_back(Token(TokenType::ADD));
                 ADVANCE;
             }
             else if (cur == '-') {
-                this->m_qTokens.push(Token(TokenType::SUB));
+                this->m_qTokens.push_back(Token(TokenType::SUB));
                 ADVANCE;
             }
             else if (cur == '*') {
-                this->m_qTokens.push(Token(TokenType::MUL));
+                this->m_qTokens.push_back(Token(TokenType::MUL));
                 ADVANCE;
             }
             else if (cur == '/') {
-                this->m_qTokens.push(Token(TokenType::DIVMOD));
+                this->m_qTokens.push_back(Token(TokenType::DIVMOD));
+                ADVANCE;
+            }
+            else if (cur == '=') {
+                this->m_qTokens.push_back(Token(Intrinsics::EQ));
+                ADVANCE;
+            }
+            else if (cur == '<') {
+                this->m_qTokens.push_back(Token(Intrinsics::LT));
+                ADVANCE;
+            }
+            else if (cur == '>') {
+                this->m_qTokens.push_back(Token(Intrinsics::GT));
+                ADVANCE;
+            }
+            else if (cur == '!' && line[i+1] == '=') {
+                this->m_qTokens.push_back(Token(Intrinsics::NE));
+                ADVANCE;
                 ADVANCE;
             }
 

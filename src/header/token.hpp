@@ -13,9 +13,18 @@ enum TokenType {
 enum Intrinsics {
     PRINT,
     DROP,
+    DUP,
     IF,
+    WHILE,
+    DO,
     ELSE,
     END,
+    EQ,
+    GT,
+    LT,
+    GE,
+    LE,
+    NE,
     NONE
 };
 
@@ -24,6 +33,7 @@ struct Token {
         m_Type = TokenType::INTRINSIC;
         m_Intrinsic = intrinsic;
         m_strValue = value;
+        m_iConPair = -1;
     }
     Token(TokenType type, std::string value = "") {
         m_Type = type;
@@ -33,6 +43,7 @@ struct Token {
     TokenType m_Type;
     Intrinsics m_Intrinsic;
     std::string m_strValue;
+    int m_iConPair;
 };
 
 #endif

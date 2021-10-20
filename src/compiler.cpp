@@ -4,7 +4,7 @@
 
 #define MEM_CAPACITY 640000
 
-CComplier::CComplier(std::string fileName, std::queue<Token> tokens) {
+CComplier::CComplier(std::string fileName, std::deque<Token> tokens) {
     // Set m_strFileName to fileName without .corth extension
     this->m_strFileName = fileName.substr(0, fileName.size() - 6);
     this->m_qTokens = tokens;
@@ -22,37 +22,37 @@ void CComplier::GenerateNasm() {
     out << "BITS 64\n";
     out << "segment .text\n";
     out << "print:\n";
-    out << "\tmov\tr9, -3689348814741910323\n";
-    out << "\tsub\trsp, 40\n";
-    out << "\tmov\tBYTE [rsp+31], 10\n";
-    out << "\tlea\trcx, [rsp+30]\n";
+    out << "\tmov r9, -3689348814741910323\n";
+    out << "\tsub rsp, 40\n";
+    out << "\tmov BYTE [rsp+31], 10\n";
+    out << "\tlea rcx, [rsp+30]\n";
     out << ".L2:\n";
-    out << "\tmov\trax, rdi\n";
-    out << "\tlea\tr8, [rsp+32]\n";
-    out << "\tmul\tr9\n";
-    out << "\tmov\trax, rdi\n";
-    out << "\tsub\tr8, rcx\n";
-    out << "\tshr\trdx, 3\n";
-    out << "\tlea\trsi, [rdx+rdx*4]\n";
-    out << "\tadd\trsi, rsi\n";
-    out << "\tsub\trax, rsi\n";
-    out << "\tadd\teax, 48\n";
-    out << "\tmov\tBYTE [rcx], al\n";
-    out << "\tmov\trax, rdi\n";
-    out << "\tmov\trdi, rdx\n";
-    out << "\tmov\trdx, rcx\n";
-    out << "\tsub\trcx, 1\n";
-    out << "\tcmp\trax, 9\n";
-    out << "\tja \t.L2\n";
-    out << "\tlea\trax, [rsp+32]\n";
-    out << "\tmov\tedi, 1\n";
-    out << "\tsub\trdx, rax\n";
-    out << "\txor\teax, eax\n";
-    out << "\tlea\trsi, [rsp+32+rdx]\n";
-    out << "\tmov\trdx, r8\n";
-    out << "\tmov\trax, 1\n";
+    out << "\tmov rax, rdi\n";
+    out << "\tlea r8, [rsp+32]\n";
+    out << "\tmul r9\n";
+    out << "\tmov rax, rdi\n";
+    out << "\tsub r8, rcx\n";
+    out << "\tshr rdx, 3\n";
+    out << "\tlea rsi, [rdx+rdx*4]\n";
+    out << "\tadd rsi, rsi\n";
+    out << "\tsub rax, rsi\n";
+    out << "\tadd eax, 48\n";
+    out << "\tmov BYTE [rcx], al\n";
+    out << "\tmov rax, rdi\n";
+    out << "\tmov rdi, rdx\n";
+    out << "\tmov rdx, rcx\n";
+    out << "\tsub rcx, 1\n";
+    out << "\tcmp rax, 9\n";
+    out << "\tja  .L2\n";
+    out << "\tlea rax, [rsp+32]\n";
+    out << "\tmov edi, 1\n";
+    out << "\tsub rdx, rax\n";
+    out << "\txor eax, eax\n";
+    out << "\tlea rsi, [rsp+32+rdx]\n";
+    out << "\tmov rdx, r8\n";
+    out << "\tmov rax, 1\n";
     out << "\tsyscall\n";
-    out << "\tadd\trsp, 40\n";
+    out << "\tadd rsp, 40\n";
     out << "\tret\n";
     out << "global _start\n";
     out << "_start:\n";
@@ -110,6 +110,92 @@ void CComplier::GenerateNasm() {
             case Intrinsics::DROP:
                 out << "\t;; -- drop --\n";
                 out << "\tpop rax\n";
+                break;
+            case Intrinsics::DUP:
+                out << "\t;; -- dup --\n";
+                out << "\tpop rax\n";
+                out << "\tpush rax\n";
+                out << "\tpush rax\n";
+                break;
+            case Intrinsics::IF:
+                out << "\t;; -- if --\n";
+                break;
+            case Intrinsics::WHILE:
+                out << "\t;; -- while --\n";
+                break;
+            case Intrinsics::DO:
+                out << "\t;; -- do --\n";
+                out << "\tpop rax\n";
+                out << "\ttest rax, rax\n";
+                out << "\tjz addr_" << this->m_qTokens.front().m_iConPair << "\n";
+                break;
+            case Intrinsics::ELSE:
+                out << "\t;; -- else --\n";
+                out << "\tjmp addr_" << this->m_qTokens.front().m_iConPair << "\n";
+                break;
+            case Intrinsics::END:
+                out << "\t;; -- end --\n";
+                break;
+            case Intrinsics::EQ:
+                out << "\t;; -- equal --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rax\n";
+                out << "\tpop rbx\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmove rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
+            case Intrinsics::GT:
+                out << "\t;; -- gt --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rbx\n";
+                out << "\tpop rax\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmovg rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
+            case Intrinsics::LT:
+                out << "\t;; -- lt --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rbx\n";
+                out << "\tpop rax\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmovl rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
+            case Intrinsics::GE:
+                out << "\t;; -- ge --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rbx\n";
+                out << "\tpop rax\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmovge rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
+            case Intrinsics::LE:
+                out << "\t;; -- le --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rbx\n";
+                out << "\tpop rax\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmovle rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
+            case Intrinsics::NE:
+                out << "\t;; -- ne --\n";
+                out << "\tmov rcx, 0\n";
+                out << "\tmov rdx, 1\n";
+                out << "\tpop rbx\n";
+                out << "\tpop rax\n";
+                out << "\tcmp rax, rbx\n";
+                out << "\tcmovne rcx, rdx\n";
+                out << "\tpush rcx\n";
+                break;
             default:
                 break;
             }
@@ -118,7 +204,7 @@ void CComplier::GenerateNasm() {
         }
 
         addrNum++;
-        this->m_qTokens.pop();
+        this->m_qTokens.pop_front();
     }
 
     out << "addr_" << tokensSize << ":\n";
